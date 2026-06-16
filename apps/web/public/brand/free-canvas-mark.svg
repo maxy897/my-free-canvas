@@ -1,0 +1,33 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Free Canvas mark</title>
+  <desc id="desc">A dark rounded canvas tile with three glowing workflow nodes connected by an infinity-shaped path.</desc>
+  <defs>
+    <linearGradient id="tile" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14171D"/>
+      <stop offset="1" stop-color="#050608"/>
+    </linearGradient>
+    <linearGradient id="path" x1="16" y1="20" x2="48" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB454"/>
+      <stop offset="0.48" stop-color="#28D7F5"/>
+      <stop offset="1" stop-color="#9B7CFF"/>
+    </linearGradient>
+    <filter id="glow" x="6" y="6" width="52" height="52" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.157 0 0 0 0 0.843 0 0 0 0 0.961 0 0 0 0.55 0"/>
+      <feBlend in2="SourceGraphic" mode="screen"/>
+    </filter>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="18" fill="url(#tile)"/>
+  <rect x="4.5" y="4.5" width="55" height="55" rx="17.5" stroke="#2B313B"/>
+  <path d="M16 18.5H48M16 31.5H48M16 44.5H48M18.5 16V48M31.5 16V48M44.5 16V48" stroke="white" stroke-opacity="0.06"/>
+  <g filter="url(#glow)">
+    <path d="M18 40C26 40 25 24 32 24C39 24 38 40 46 40" stroke="url(#path)" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M18 24C26 24 25 40 32 40C39 40 38 24 46 24" stroke="url(#path)" stroke-width="4.5" stroke-linecap="round" opacity="0.74"/>
+  </g>
+  <circle cx="18" cy="24" r="5.5" fill="#FFB454"/>
+  <circle cx="18" cy="24" r="2" fill="#050608" fill-opacity="0.82"/>
+  <circle cx="32" cy="32" r="6" fill="#28D7F5"/>
+  <circle cx="32" cy="32" r="2.2" fill="#050608" fill-opacity="0.82"/>
+  <circle cx="46" cy="40" r="5.5" fill="#9B7CFF"/>
+  <circle cx="46" cy="40" r="2" fill="#050608" fill-opacity="0.82"/>
+</svg>

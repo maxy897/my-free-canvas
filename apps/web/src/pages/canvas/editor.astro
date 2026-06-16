@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CanvasApp from "../../components/canvas/CanvasApp.tsx";
+import AuthButton from "../../components/react/AuthButton.tsx";
+---
+
+<BaseLayout>
+  <div class="relative h-screen w-screen overflow-hidden bg-[#050608]">
+    <CanvasApp client:only="react" />
+    <div class="pointer-events-auto absolute right-5 top-5 z-30">
+      <AuthButton client:only="react" compact />
+    </div>
+  </div>
+</BaseLayout>

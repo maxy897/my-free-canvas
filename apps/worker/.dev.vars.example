@@ -1,0 +1,35 @@
+# .dev.vars.example
+# Copy to .dev.vars and fill in your values. Never commit .dev.vars.
+
+# Required for auth/session signing. Generate with: openssl rand -hex 32
+BETTER_AUTH_SECRET=your-random-32-byte-hex-string-here
+
+# OAuth providers (optional; set only the providers you enable)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+MICROSOFT_CLIENT_ID=
+MICROSOFT_CLIENT_SECRET=
+DISCORD_CLIENT_ID=
+DISCORD_CLIENT_SECRET=
+LINUXDO_CLIENT_ID=
+LINUXDO_CLIENT_SECRET=
+
+# LinuxDo defaults (optional overrides)
+LINUXDO_AUTHORIZE_URL=https://connect.linux.do/oauth2/authorize
+LINUXDO_TOKEN_URL=https://connect.linux.do/oauth2/token
+LINUXDO_USERINFO_URL=https://connect.linux.do/api/user
+LINUXDO_SCOPES=user
+LINUXDO_TOKEN_AUTH_METHOD=client_secret_post
+LINUXDO_USE_PKCE=true
+
+# Canvas async generation relay (optional for mock/local-only flows)
+DENO_RELAY_URL=http://localhost:8001
+CANVAS_WEBHOOK_BASE_URL=http://localhost:8787
+DENO_SECRET=dev-webhook-secret
+
+# Canvas asset upload proxy / R2 public URL (optional)
+ASSET_SERVICE_URL=
+ASSET_SERVICE_API_KEY=
+R2_PUBLIC_URL=

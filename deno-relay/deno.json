@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-net --allow-env main.ts",
+    "dev:8001": "PORT=8001 DENO_SECRET=dev-webhook-secret deno run --allow-net --allow-env main.ts"
+  },
+  "deploy": {
+    "org": "<your-deno-deploy-org>",
+    "app": "<your-deno-deploy-app>"
+  }
+}

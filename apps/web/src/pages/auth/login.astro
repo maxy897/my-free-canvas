@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import AuthButton from "../../components/react/AuthButton.tsx";
+import EmailPasswordAuthForm from "../../components/react/EmailPasswordAuthForm.tsx";
+---
+
+<BaseLayout>
+  <div class="darkroom-grid flex min-h-screen items-center justify-center px-4">
+    <div class="w-full max-w-sm rounded-[28px] border border-[#2B313B] bg-[#14171D]/90 p-8 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+      <p class="mb-3 text-center text-xs font-semibold uppercase tracking-[0.22em] text-[#28D7F5]">Welcome Back</p>
+      <h1 class="mb-6 text-center text-2xl font-bold tracking-[-0.03em]">Sign In</h1>
+      <EmailPasswordAuthForm mode="login" client:only="react" />
+      <div class="my-6 flex items-center gap-3">
+        <span class="h-px flex-1 bg-[#2B313B]"></span>
+        <span class="text-xs uppercase tracking-[0.18em] text-[#788493]">or</span>
+        <span class="h-px flex-1 bg-[#2B313B]"></span>
+      </div>
+      <div class="flex justify-center">
+        <AuthButton signInLabel="Continue with OAuth" showEmailLink={false} client:only="react" />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

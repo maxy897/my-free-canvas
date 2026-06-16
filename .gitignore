@@ -1,0 +1,48 @@
+node_modules/
+dist/
+.wrangler/
+.astro/
+.dev.vars
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.log
+
+# OS / IDE
+.DS_Store
+**/.DS_Store
+
+# Logs
+logs/
+
+# Wrangler real config (use wrangler.toml.example to bootstrap)
+apps/worker/wrangler.toml
+
+# Personal docs / planning / AI-generated docs
+docs/
+tasks/
+.ana-docs/
+.claude/
+
+# Personal data exports
+firewall-events-*.json
+canvas.json
+# Deployment/local tool state
+.envrc
+*.local
+*.pem
+*.key
+*.cert
+*.crt
+
+# Package manager / Deno caches
+.pnpm-store/
+.deno/
+
+# Test/build artifacts
+coverage/
+playwright-report/
+test-results/

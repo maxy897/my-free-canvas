@@ -1,0 +1,12 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Free Canvas monochrome mark</title>
+  <desc id="desc">A single-color Free Canvas mark for simple or constrained applications.</desc>
+  <rect x="4" y="4" width="56" height="56" rx="18" fill="currentColor" fill-opacity="0.08"/>
+  <rect x="4.5" y="4.5" width="55" height="55" rx="17.5" stroke="currentColor" stroke-opacity="0.38"/>
+  <path d="M16 18.5H48M16 31.5H48M16 44.5H48M18.5 16V48M31.5 16V48M44.5 16V48" stroke="currentColor" stroke-opacity="0.12"/>
+  <path d="M18 40C26 40 25 24 32 24C39 24 38 40 46 40" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M18 24C26 24 25 40 32 40C39 40 38 24 46 24" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" opacity="0.74"/>
+  <circle cx="18" cy="24" r="5.5" fill="currentColor"/>
+  <circle cx="32" cy="32" r="6" fill="currentColor"/>
+  <circle cx="46" cy="40" r="5.5" fill="currentColor"/>
+</svg>

@@ -1,0 +1,6 @@
+{
+  "deploy": {
+    "org": "<your-deno-deploy-org>",
+    "app": "<your-deno-deploy-app>"
+  }
+}

@@ -1,0 +1,83 @@
+# ─────────────────────────────────────────────────────────────────────────
+# Wrangler configuration template
+#
+# 1. Copy this file to `wrangler.toml` (it is gitignored).
+# 2. Fill in real values for: D1 database id, KV namespace id, R2 bucket
+#    name, Pages/Worker domains, Cloudflare zone, and the asset service URL.
+# 3. Provide secrets via `wrangler secret put` (do NOT put them in this file):
+#      BETTER_AUTH_SECRET, GOOGLE_CLIENT_ID/SECRET, LINUXDO_CLIENT_ID/SECRET,
+#      TELEGRAM_BOT_TOKEN,
+#      TELEGRAM_CHAT_ID, FAL_API_KEY, CHATGPT2API_KEY, DENO_SECRET,
+#      ASSET_SERVICE_API_KEY, etc.
+#    See `.env.example` for the full list.
+# ─────────────────────────────────────────────────────────────────────────
+
+name = "your-worker-name"               # e.g. "free-canvas-api"
+main = "src/index.ts"
+compatibility_date = "2025-05-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+# --- Bindings ---
+
+[[d1_databases]]
+binding = "DB"
+database_name = "<your-d1-database-name>"
+database_id = "<your-d1-database-id>"
+migrations_dir = "migrations"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "<your-kv-namespace-id>"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "<your-r2-bucket-name>"
+
+# --- Environment Variables ---
+# These are NON-SECRET runtime variables. Use `wrangler secret put` for secrets.
+
+[vars]
+ENVIRONMENT = "production"
+FRONTEND_URL = "https://<your-web-domain>"
+# Public base URL for the external asset service.
+# Leave empty if you do not run a separate asset service.
+ASSET_SERVICE_URL = ""
+
+# --- Triggers ---
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+# --- Routes ---
+# Remove this block entirely if you only use the *.workers.dev URL.
+
+[[routes]]
+pattern = "<your-api-domain>/*"        # e.g. "api.example.com/*"
+zone_name = "<your-cloudflare-zone>"   # e.g. "example.com"
+
+# --- Development Override ---
+
+[env.dev]
+workers_dev = true
+
+[[env.dev.d1_databases]]
+binding = "DB"
+database_name = "<your-d1-database-name>"
+database_id = "<your-d1-database-id>"
+migrations_dir = "migrations"
+
+[[env.dev.kv_namespaces]]
+binding = "KV"
+id = "<your-kv-namespace-id>"
+
+[[env.dev.r2_buckets]]
+binding = "R2"
+bucket_name = "<your-r2-bucket-name>"
+
+[env.dev.vars]
+ENVIRONMENT = "development"
+FRONTEND_URL = "http://localhost:4321"
+ASSET_SERVICE_URL = ""
+DENO_RELAY_URL = "http://localhost:8001"
+CANVAS_WEBHOOK_BASE_URL = "http://localhost:8787"

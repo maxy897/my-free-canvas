@@ -1,0 +1,8 @@
+---
+import WorkspaceLayout from "../layouts/WorkspaceLayout.astro";
+import { FormImageGenerator } from "../components/canvas/FormImageGenerator";
+---
+
+<WorkspaceLayout title="Generate">
+  <FormImageGenerator client:only="react" />
+</WorkspaceLayout>

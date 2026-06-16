@@ -1,0 +1,20 @@
+{
+  "name": "free-canvas",
+  "private": true,
+  "scripts": {
+    "dev": "bash scripts/dev-all.sh",
+    "build": "pnpm --filter './packages/*' build && pnpm --filter './apps/*' build",
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:worker": "pnpm --filter worker run deploy",
+    "deploy:web": "pnpm --filter web run deploy",
+    "clean:local": "bash scripts/clean-local-data.sh",
+    "test": "pnpm --filter worker test && pnpm --filter web test",
+    "typecheck": "pnpm --filter './packages/*' typecheck && pnpm --filter './apps/*' typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  },
+  "packageManager": "pnpm@11.0.9",
+  "version": "0.0.0",
+  "license": "MIT"
+}

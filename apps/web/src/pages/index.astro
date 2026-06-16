@@ -1,0 +1,311 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+  <div class="darkroom-grid min-h-screen px-4 py-6">
+    <header class="relative z-50 mx-auto flex max-w-6xl items-center justify-between rounded-full border border-[#2B313B] bg-[#181C23]/70 px-4 py-3 backdrop-blur-xl">
+      <a href="/" class="flex items-center gap-3">
+        <img src="/brand/free-canvas-mark.svg" alt="" class="h-8 w-8" />
+        <span class="text-sm font-bold">Free Canvas</span>
+      </a>
+      <nav data-home-auth-nav class="flex items-center gap-2 text-sm text-[#B8C0CC]">
+        <span class="h-8 w-20 animate-pulse rounded-full border border-[#2B313B] bg-[#1D2129]"></span>
+      </nav>
+    </header>
+
+    <main class="relative z-0 mx-auto grid min-h-[calc(100vh-96px)] max-w-6xl items-center gap-10 py-16 lg:grid-cols-[1.05fr_0.95fr]">
+      <section>
+        <p class="mb-4 text-xs font-semibold uppercase tracking-[0.24em] text-[#28D7F5]">AI Image & Video Workflow</p>
+        <h1 class="max-w-3xl text-5xl font-bold leading-[0.95] tracking-[-0.06em] text-[#F5F7FA] md:text-7xl">
+          在无限画布里，把灵感连接成影像流水线
+        </h1>
+        <p class="mt-6 max-w-xl text-base leading-7 text-[#B8C0CC]">
+          用文本、图片、图片生成、视频生成四类节点搭建 DAG 工作流。界面为创作而生：画布沉下去，素材和结果浮起来。
+        </p>
+        <div data-home-hero-actions class="mt-8 flex flex-wrap gap-3">
+          <span class="h-12 w-36 animate-pulse rounded-full border border-[#2B313B] bg-[#1D2129]"></span>
+        </div>
+      </section>
+
+      <section class="relative rounded-[32px] border border-[#2B313B] bg-[#14171D]/86 p-4 shadow-[0_28px_90px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+        <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[#28D7F5]/20 blur-3xl"></div>
+        <div class="absolute -bottom-10 left-8 h-48 w-48 rounded-full bg-[#9B7CFF]/15 blur-3xl"></div>
+        <div class="relative min-h-[420px] overflow-hidden rounded-[24px] border border-[#2B313B] bg-[#050608] p-5">
+          <div class="absolute inset-0 opacity-60" style="background-image: radial-gradient(rgba(184,192,204,.18) 1px, transparent 1px); background-size: 24px 24px;"></div>
+          <div class="relative w-56 rounded-[18px] border border-[#FFB454]/35 bg-[#14171D] p-3">
+            <div class="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#FFB454]">Text</div>
+            <div class="h-20 rounded-xl border border-[#2B313B] bg-[#1D2129] p-3 text-xs leading-5 text-[#B8C0CC]">一只电影感灯光下的白色小狗，柔和景深...</div>
+          </div>
+          <div class="relative ml-auto mt-10 w-64 rounded-[18px] border border-[#28D7F5]/35 bg-[#14171D] p-3 shadow-[0_0_35px_rgba(40,215,245,0.12)]">
+            <div class="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#28D7F5]">Image Gen</div>
+            <div class="h-36 rounded-xl bg-gradient-to-br from-[#F5D8B7] via-[#D7EFF2] to-[#67584B]"></div>
+          </div>
+          <div class="relative mt-10 w-60 rounded-[18px] border border-[#9B7CFF]/35 bg-[#14171D] p-3">
+            <div class="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9B7CFF]">Video Gen</div>
+            <div class="flex h-28 items-center justify-center rounded-xl border border-dashed border-[#3C4654] text-xs text-[#788493]">5s cinematic motion</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</BaseLayout>
+
+<script>
+  import { API_URL } from "../lib/api";
+  import {
+    getAvailableProviders,
+    signInWithOAuthProvider,
+    signOutAndRedirect,
+    type OAuthProvider,
+  } from "../lib/auth-client";
+
+  interface SessionUser {
+    name?: string | null;
+    image?: string | null;
+  }
+
+  interface SessionResponse {
+    user?: SessionUser | null;
+  }
+
+  const nav = document.querySelector<HTMLElement>("[data-home-auth-nav]");
+  const heroActions = document.querySelector<HTMLElement>("[data-home-hero-actions]");
+  const fallbackProviders: OAuthProvider[] = [{ provider: "google", name: "Google", icon: "google" }];
+  let availableProviders: OAuthProvider[] = [];
+  let providersLoaded = false;
+  let isSignedOutRendered = false;
+
+  getAvailableProviders()
+    .then((providers) => {
+      availableProviders = providers.length ? providers : fallbackProviders;
+      providersLoaded = true;
+      if (isSignedOutRendered) renderSignedOut();
+    })
+    .catch((error) => {
+      console.error("Failed to load auth providers:", error);
+      availableProviders = fallbackProviders;
+      providersLoaded = true;
+      if (isSignedOutRendered) renderSignedOut();
+    });
+
+  const createButton = (className: string, text: string) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.textContent = text;
+    return button;
+  };
+
+  const getOrderedProviders = () =>
+    [...availableProviders].sort((a, b) => {
+      if (a.provider === "google") return -1;
+      if (b.provider === "google") return 1;
+      return 0;
+    });
+
+  const appendLoadingButton = (container: HTMLElement, className: string, text: string) => {
+    const button = createButton(className, text);
+    button.setAttribute("disabled", "");
+    container.append(button);
+  };
+
+  const appendSignInMenu = (
+    container: HTMLElement,
+    className: string,
+    triggerText: string
+  ) => {
+    const wrap = document.createElement("div");
+    wrap.className = "relative";
+
+    const trigger = createButton(className, triggerText);
+    trigger.setAttribute("aria-haspopup", "menu");
+    trigger.setAttribute("aria-expanded", "false");
+
+    const menu = document.createElement("div");
+    menu.role = "menu";
+    menu.hidden = true;
+    menu.className =
+      "absolute right-0 top-full z-[100] mt-2 min-w-44 rounded-2xl border border-[#2B313B] bg-[#14171D]/96 p-1 shadow-[0_18px_50px_rgba(0,0,0,0.38)] backdrop-blur-xl";
+
+    const providers = getOrderedProviders();
+    const emailButton = document.createElement("a");
+    emailButton.href = "/auth/login";
+    emailButton.className =
+      "block w-full rounded-xl px-3 py-2 text-left text-sm text-[#B8C0CC] hover:bg-[#1D2129] hover:text-[#F5F7FA]";
+    emailButton.setAttribute("role", "menuitem");
+    emailButton.textContent = "Sign in with email";
+    menu.append(emailButton);
+
+    providers.forEach((provider) => {
+      const button = createButton(
+        "block w-full rounded-xl px-3 py-2 text-left text-sm text-[#B8C0CC] hover:bg-[#1D2129] hover:text-[#F5F7FA]",
+        `Sign in with ${provider.name}`
+      );
+      button.setAttribute("role", "menuitem");
+      button.addEventListener("click", () => {
+        button.textContent = "Signing in...";
+        button.setAttribute("disabled", "");
+        signInWithOAuthProvider(provider.provider, "/dashboard").catch((error) => {
+          console.error(`Sign in with ${provider.name} failed:`, error);
+          button.textContent = `Sign in with ${provider.name}`;
+          button.removeAttribute("disabled");
+        });
+      });
+      menu.append(button);
+    });
+
+    trigger.addEventListener("click", () => {
+      menu.hidden = !menu.hidden;
+      trigger.setAttribute("aria-expanded", String(!menu.hidden));
+    });
+
+    wrap.append(trigger, menu);
+    container.append(wrap);
+  };
+
+  const renderSignedOut = () => {
+    isSignedOutRendered = true;
+    if (!nav) return;
+
+    nav.replaceChildren();
+    if (providersLoaded) {
+      appendSignInMenu(
+        nav,
+        "rounded-full bg-[#F5F7FA] px-4 py-1.5 text-sm font-semibold text-[#050608] shadow-[0_0_28px_rgba(245,247,250,0.16)] hover:bg-white",
+        "Sign in"
+      );
+    } else {
+      appendLoadingButton(
+        nav,
+        "rounded-full bg-[#F5F7FA] px-4 py-1.5 text-sm font-semibold text-[#050608] opacity-70",
+        "Loading..."
+      );
+    }
+
+    if (!heroActions) return;
+
+    heroActions.replaceChildren();
+    if (providersLoaded) {
+      appendSignInMenu(
+        heroActions,
+        "rounded-full bg-[#F5F7FA] px-6 py-3 text-sm font-semibold text-[#050608] shadow-[0_0_32px_rgba(245,247,250,0.18)] hover:bg-white",
+        "登录后开始创作"
+      );
+    } else {
+      appendLoadingButton(
+        heroActions,
+        "rounded-full bg-[#F5F7FA] px-6 py-3 text-sm font-semibold text-[#050608] opacity-70",
+        "加载登录方式..."
+      );
+    }
+  };
+
+  const renderSignedIn = (user: SessionUser) => {
+    if (!nav) return;
+
+    nav.replaceChildren();
+
+    const canvasLink = document.createElement("a");
+    canvasLink.href = "/canvas";
+    canvasLink.className =
+      "rounded-full px-3 py-1.5 text-sm text-[#B8C0CC] hover:bg-[#1D2129] hover:text-[#F5F7FA]";
+    canvasLink.textContent = "Canvas";
+
+    const menuWrap = document.createElement("div");
+    menuWrap.className = "relative";
+
+    const avatarButton = createButton(
+      "flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-[#3C4654] bg-[#1D2129] text-sm font-semibold text-[#F5F7FA] hover:border-[#28D7F5]/70",
+      ""
+    );
+    avatarButton.setAttribute("aria-haspopup", "menu");
+    avatarButton.setAttribute("aria-expanded", "false");
+
+    if (user.image) {
+      const image = document.createElement("img");
+      image.src = user.image;
+      image.alt = "";
+      image.className = "h-full w-full object-cover";
+      avatarButton.append(image);
+    } else {
+      avatarButton.textContent = user.name?.charAt(0).toUpperCase() || "U";
+    }
+
+    const menu = document.createElement("div");
+    menu.role = "menu";
+    menu.hidden = true;
+    menu.className =
+      "absolute right-0 top-full z-50 mt-2 min-w-32 rounded-2xl border border-[#2B313B] bg-[#14171D]/96 p-1 shadow-[0_18px_50px_rgba(0,0,0,0.38)] backdrop-blur-xl";
+
+    const signOutButton = createButton(
+      "block w-full rounded-xl px-3 py-2 text-left text-sm text-[#B8C0CC] hover:bg-[#1D2129] hover:text-[#F5F7FA]",
+      "Sign out"
+    );
+    signOutButton.setAttribute("role", "menuitem");
+    signOutButton.addEventListener("click", async () => {
+      menu.hidden = true;
+      avatarButton.setAttribute("aria-expanded", "false");
+      signOutButton.textContent = "Signing out...";
+      signOutButton.setAttribute("disabled", "");
+      try {
+        await signOutAndRedirect();
+      } catch (error) {
+        console.error("Sign out failed:", error);
+        signOutButton.textContent = "Sign out";
+        signOutButton.removeAttribute("disabled");
+      }
+    });
+
+    const closeMenu = (event: PointerEvent | KeyboardEvent) => {
+      if (event instanceof KeyboardEvent && event.key !== "Escape") return;
+      if (event instanceof PointerEvent && menuWrap.contains(event.target as Node)) return;
+
+      menu.hidden = true;
+      avatarButton.setAttribute("aria-expanded", "false");
+      document.removeEventListener("pointerdown", closeMenu);
+      document.removeEventListener("keydown", closeMenu);
+    };
+
+    avatarButton.addEventListener("click", () => {
+      menu.hidden = !menu.hidden;
+      avatarButton.setAttribute("aria-expanded", String(!menu.hidden));
+      if (!menu.hidden) {
+        document.addEventListener("pointerdown", closeMenu);
+        document.addEventListener("keydown", closeMenu);
+      }
+    });
+
+    menu.append(signOutButton);
+    menuWrap.append(avatarButton, menu);
+    nav.append(canvasLink, menuWrap);
+
+    if (!heroActions) return;
+
+    heroActions.replaceChildren();
+    const canvasEditorLink = document.createElement("a");
+    canvasEditorLink.href = "/canvas/editor";
+    canvasEditorLink.className =
+      "rounded-full bg-[#F5F7FA] px-6 py-3 text-sm font-semibold text-[#050608] shadow-[0_0_32px_rgba(245,247,250,0.18)] hover:bg-white";
+    canvasEditorLink.textContent = "打开画布";
+
+    const dashboardLink = document.createElement("a");
+    dashboardLink.href = "/dashboard";
+    dashboardLink.className =
+      "rounded-full border border-[#3C4654] bg-[#181C23]/70 px-6 py-3 text-sm font-semibold text-[#F5F7FA] hover:border-[#28D7F5]/70";
+    dashboardLink.textContent = "进入工作区";
+
+    heroActions.append(canvasEditorLink, dashboardLink);
+  };
+
+  fetch(`${API_URL}/api/auth/get-session`, { credentials: "include" })
+    .then((response) => (response.ok ? response.json() : null))
+    .then((session: SessionResponse | null) => {
+      if (session?.user) {
+        renderSignedIn(session.user);
+      } else {
+        renderSignedOut();
+      }
+    })
+    .catch(renderSignedOut);
+</script>
