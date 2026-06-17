@@ -71,10 +71,6 @@ migrations_dir = "migrations"
 binding = "KV"
 id = "<your-kv-namespace-id>"
 
-[[env.dev.r2_buckets]]
-binding = "R2"
-bucket_name = "<your-r2-bucket-name>"
-
 [env.dev.vars]
 ENVIRONMENT = "development"
 FRONTEND_URL = "http://localhost:4321"
