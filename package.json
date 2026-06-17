@@ -1,4 +1,5 @@
 {
+  "packageManager": "pnpm@9.15.4",
   "name": "free-canvas",
   "private": true,
   "scripts": {
