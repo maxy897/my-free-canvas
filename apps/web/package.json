@@ -10,6 +10,11 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
+  },
   "dependencies": {
     "@astrojs/react": "^4.2.0",
     "@shared/types": "workspace:*",
