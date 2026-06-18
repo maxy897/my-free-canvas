@@ -1,21 +1,24 @@
 {
-  "packageManager": "pnpm@9.15.4",
   "name": "free-canvas",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
+  },
   "scripts": {
-    "dev": "bash scripts/dev-all.sh",
-    "build": "pnpm --filter './packages/*' build && pnpm --filter './apps/*' build",
+    "dev": "pnpm --filter worker dev",
+    "web:dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
     "deploy": "bash scripts/deploy.sh",
-    "deploy:worker": "pnpm --filter worker run deploy",
-    "deploy:web": "pnpm --filter web run deploy",
-    "clean:local": "bash scripts/clean-local-data.sh",
-    "test": "pnpm --filter worker test && pnpm --filter web test",
-    "typecheck": "pnpm --filter './packages/*' typecheck && pnpm --filter './apps/*' typecheck"
+    "typecheck": "pnpm --filter web typecheck && pnpm --filter worker typecheck",
+    "test": "pnpm --filter web test && pnpm --filter worker test"
   },
   "devDependencies": {
     "typescript": "^5.7.0"
-  },
-  "packageManager": "pnpm@11.0.9",
-  "version": "0.0.0",
-  "license": "MIT"
+  }
 }
